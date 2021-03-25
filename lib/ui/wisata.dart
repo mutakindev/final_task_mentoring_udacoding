@@ -28,13 +28,6 @@ class _WisataPageState extends State<WisataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => UploadImageDemo()));
-        },
-      ),
       body: BlocProvider(
           create: (context) => _wisataBloc,
           child: BlocBuilder<WisataBloc, WisataState>(
@@ -51,7 +44,7 @@ class _WisataPageState extends State<WisataPage> {
                 List<WisataResponse> dataTempatWisata = [];
                 dataTempatWisata.addAll(state.listWisata);
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0)
+                  padding: EdgeInsets.symmetric(horizontal: 16.0)
                       .add(EdgeInsets.only(top: 24)),
                   child: CustomScrollView(
                     slivers: [
@@ -248,56 +241,66 @@ class _WisataPageState extends State<WisataPage> {
       itemBuilder: (BuildContext context, int itemIndex, _) {
         if (dataTempatWisata == null) return null;
         WisataResponse wisata = dataTempatWisata[itemIndex];
-        return Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      "$baseImageUrl/${wisata.images.first}"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.black26,
-              width: double.infinity,
-            ),
-            Align(
-              alignment: Alignment(-0.9, 0.9),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  wisata.title,
-                  style: Theme.of(context).textTheme.headline6.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 100,
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Center(
-                    child: Text(
-                      "Rp ${wisata.price}",
-                      style: TextStyle(
-                          color: Colors.white,
-                          shadows: [Shadow(blurRadius: 2)]),
-                    ),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailWisataPage(
+                          wisata: wisata,
+                        )));
+          },
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(
+                        "$baseImageUrl/${wisata.images.first}"),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            )
-          ],
+              Container(
+                color: Colors.black26,
+                width: double.infinity,
+              ),
+              Align(
+                alignment: Alignment(-0.9, 0.9),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    wisata.title,
+                    style: Theme.of(context).textTheme.headline6.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 100,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Center(
+                      child: Text(
+                        "Rp ${wisata.price}",
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [Shadow(blurRadius: 2)]),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         );
       },
       carouselController: buttonCarouselController,

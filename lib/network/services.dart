@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:parawisata_mutakin/model/categories_model.dart';
+import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/model/wisata_model.dart';
 
@@ -25,11 +26,11 @@ class ApiServices {
     return plantsResponseFromJson(response.body);
   }
 
-  Future<List<PlantsResponse>> getPlacementCategories() async {
+  Future<List<PlantCategoryResponse>> getPlacementCategories() async {
     var url =
         Uri.https('flutter-task4.000webhostapp.com', '/api/plant_categories');
 
     final response = await http.get(url);
-    return plantsResponseFromJson(response.body);
+    return plantCategoryResponseFromJson(response.body);
   }
 }
