@@ -4,12 +4,11 @@
 
 import 'dart:convert';
 
+import 'dart:io';
+
 List<PlantsResponse> plantsResponseFromJson(String str) =>
     List<PlantsResponse>.from(
         json.decode(str).map((x) => PlantsResponse.fromJson(x)));
-
-String plantsResponseToJson(List<PlantsResponse> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class PlantsResponse {
   PlantsResponse({
@@ -68,5 +67,44 @@ class PlantsResponse {
         "image": image,
         "category": category,
         "category_name": categoryName,
+      };
+}
+
+class PlantRequest {
+  String plantName;
+  String length;
+  String weight;
+  String diameter;
+  String temperatur;
+  String water;
+  String placement;
+  String information;
+  File image;
+  String category;
+
+  PlantRequest({
+    this.plantName,
+    this.length,
+    this.weight,
+    this.diameter,
+    this.temperatur,
+    this.water,
+    this.placement,
+    this.information,
+    this.image,
+    this.category,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "plant_name": plantName,
+        "length": length,
+        "weight": weight,
+        "diameter": diameter,
+        "temperatur": temperatur,
+        "water": water,
+        "placement": placement,
+        "information": information,
+        "image": image,
+        "category": category,
       };
 }

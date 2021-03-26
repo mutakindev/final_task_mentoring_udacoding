@@ -1,12 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:parawisata_mutakin/bloc/plants_bloc.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
+import 'package:parawisata_mutakin/network/services.dart';
+import 'package:parawisata_mutakin/ui/plants.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class DetailPlantPage extends StatelessWidget {
   final PlantsResponse plant;
+  ApiServices _apiServices = ApiServices();
 
-  const DetailPlantPage({this.plant});
+  DetailPlantPage({this.plant});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +31,12 @@ class DetailPlantPage extends StatelessWidget {
                       color: Colors.white,
                       image: DecorationImage(
                           alignment: Alignment.centerLeft,
-                          image: CachedNetworkImageProvider(
-                            "$baseImageUrl/final_task/${plant.image}",
-                          ),
+                          image: plant.image == null
+                              ? NetworkImage(
+                                  "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif")
+                              : CachedNetworkImageProvider(
+                                  "$basePlantImageUrl/${plant.image}",
+                                ),
                           fit: BoxFit.contain),
                     ),
                   ),
@@ -163,7 +170,19 @@ class DetailPlantPage extends StatelessWidget {
                           iconSize: 32,
                           icon: Icon(Icons.delete_outline_rounded,
                               color: Colors.green),
-                          onPressed: () {}),
+                          onPressed: () async {
+                            print(plant.id);
+                            showSnackbarMessage(context, "Loading...");
+                            Map<String, dynamic> result =
+                                await _apiServices.deletePlant(plant.id);
+
+                            if (result != null && result["value"] == 1) {
+                              PlantsBloc().add(GetPlantsList());
+                              showSnackbarMessage(context,
+                                  "${plant.plantName} ${result['message']}");
+                              Navigator.pop(context);
+                            }
+                          }),
                       IconButton(
                           iconSize: 32,
                           icon: Icon(Icons.edit, color: Colors.green),

@@ -39,7 +39,7 @@ class _DetailWisataPageState extends State<DetailWisataPage> {
                         ],
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                              "$baseImageUrl/${widget.wisata.images[selectedImage]}"),
+                              "$baseWisataImageUrl/${widget.wisata.images[selectedImage]}"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -126,7 +126,7 @@ class _DetailWisataPageState extends State<DetailWisataPage> {
                                               color: Colors.white38, width: 4),
                                           image: DecorationImage(
                                             image: CachedNetworkImageProvider(
-                                                "$baseImageUrl/$e"),
+                                                "$baseWisataImageUrl/$e"),
                                             fit: BoxFit.cover,
                                           ),
                                         ),

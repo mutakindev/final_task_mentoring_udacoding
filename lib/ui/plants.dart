@@ -3,10 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parawisata_mutakin/bloc/plant_categories_bloc.dart';
+import 'package:parawisata_mutakin/bloc/plants_bloc.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
-import 'package:parawisata_mutakin/ui/CategoryPage.dart';
+import 'package:parawisata_mutakin/ui/add_plant.dart';
+import 'package:parawisata_mutakin/ui/categories_page.dart';
 import 'package:parawisata_mutakin/ui/detail_plant_page.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
@@ -17,32 +19,63 @@ class Plants extends StatefulWidget {
 
 class _PlantsState extends State<Plants> {
   ApiServices _apiServices = ApiServices();
-  int _currentIndex = 0;
+  PlantsBloc _plantsBloc = PlantsBloc();
   CarouselController buttonCarouselController = CarouselController();
+  static PlantCategoriesBloc plantCategoriesBloc = PlantCategoriesBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    _plantsBloc.add(GetPlantsList());
+    plantCategoriesBloc.add(GetPlantCategoriesList());
+  }
+
+  refreshData() {
+    _plantsBloc.add(GetPlantsList());
+    plantCategoriesBloc.add(GetPlantCategoriesList());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-          future: _apiServices.getDataPlants(),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<PlantsResponse>> snapshot) {
-            if (snapshot.hasData) {
-              return buildUIWidget(snapshot.data);
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        child: RefreshIndicator(
+          onRefresh: () {
+            refreshData();
+            return Future.delayed(Duration(seconds: 2));
           },
+          child: BlocProvider(
+              create: (context) => _plantsBloc,
+              child: BlocBuilder<PlantsBloc, PlantsState>(
+                // ignore: missing_return
+                builder: (context, state) {
+                  if (state is PlantsInitial) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PlantsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PlantsLoaded) {
+                    return buildUIWidget(state.listPlants);
+                  } else if (state is PlantsError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  }
+                },
+              )),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         elevation: 2,
         child: Icon(Icons.add, color: Colors.white),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddPlantPage()));
+        },
       ),
     );
   }
@@ -76,7 +109,7 @@ class _PlantsState extends State<Plants> {
                 buildCarousel(data),
                 // buildCarouselIndicator(data),
                 SizedBox(height: 16),
-                Categories(data),
+                Categories(data, plantCategoriesBloc),
                 SizedBox(
                   height: 20,
                 ),
@@ -137,8 +170,12 @@ class _PlantsState extends State<Plants> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                              "$baseImageUrl/final_task/${plant.image}"),
+                                          image: plant.image == null
+                                              ? NetworkImage(
+                                                  "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif")
+                                              : CachedNetworkImageProvider(
+                                                  "$basePlantImageUrl/${plant.image}",
+                                                ),
                                           fit: BoxFit.cover)),
                                 ),
                               ),
@@ -230,10 +267,14 @@ class _PlantsState extends State<Plants> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
-                                        alignment: Alignment.centerLeft,
-                                        image: CachedNetworkImageProvider(
-                                            "$baseImageUrl/final_task/${plant.image}"),
-                                      ),
+                                          alignment: Alignment.centerLeft,
+                                          image: plant.image == null
+                                              ? NetworkImage(
+                                                  "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif")
+                                              : CachedNetworkImageProvider(
+                                                  "$basePlantImageUrl/${plant.image}",
+                                                ),
+                                          fit: BoxFit.cover),
                                     ),
                                   ),
                                   Align(
@@ -351,9 +392,13 @@ class _PlantsState extends State<Plants> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        "$baseImageUrl/final_task/${plant.image}",
-                      ),
+                      image: plant.image == null
+                          ? NetworkImage(
+                              "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif")
+                          : CachedNetworkImageProvider(
+                              "$basePlantImageUrl/${plant.image}",
+                            ),
+                      fit: BoxFit.contain,
                       alignment: Alignment.centerLeft),
                 ),
               ),
@@ -395,24 +440,21 @@ class _PlantsState extends State<Plants> {
       },
       carouselController: buttonCarouselController,
       options: CarouselOptions(
-          autoPlay: true,
-          viewportFraction: 1.0,
-          aspectRatio: 2.0,
-          height: 145,
-          initialPage: 1,
-          onPageChanged: (index, reason) {
-            setState(() {
-              _currentIndex = index;
-            });
-          }),
+        autoPlay: true,
+        viewportFraction: 1.0,
+        aspectRatio: 2.0,
+        height: 145,
+        initialPage: 1,
+      ),
     );
   }
 }
 
 class Categories extends StatefulWidget {
   final List<PlantsResponse> data;
+  PlantCategoriesBloc _plantCategoriesBloc;
 
-  Categories(this.data);
+  Categories(this.data, this._plantCategoriesBloc);
   @override
   _CategoriesState createState() => _CategoriesState();
 }
@@ -420,7 +462,6 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
   List<PlantsResponse> filteredList = [];
 
-  PlantCategoriesBloc _plantCategoriesBloc = PlantCategoriesBloc();
   var selectedCategory = "";
 
   filterData(String query) {
@@ -433,7 +474,12 @@ class _CategoriesState extends State<Categories> {
   void initState() {
     super.initState();
     filteredList.addAll(widget.data);
-    _plantCategoriesBloc.add(GetPlantCategoriesList());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget._plantCategoriesBloc.close();
   }
 
   @override
@@ -467,7 +513,7 @@ class _CategoriesState extends State<Categories> {
           ],
         ),
         BlocProvider(
-          create: (context) => _plantCategoriesBloc,
+          create: (context) => widget._plantCategoriesBloc,
           child: BlocBuilder<PlantCategoriesBloc, PlantCategoriesState>(
             builder: (context, state) {
               if (state is PlantCategoriesInitial) {
@@ -601,8 +647,12 @@ class _CategoriesState extends State<Categories> {
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 image: DecorationImage(
-                                                    image: CachedNetworkImageProvider(
-                                                        "$baseImageUrl/final_task/${plant.image}"),
+                                                    image: plant.image == null
+                                                        ? NetworkImage(
+                                                            "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif")
+                                                        : CachedNetworkImageProvider(
+                                                            "$basePlantImageUrl/${plant.image}",
+                                                          ),
                                                     fit: BoxFit.cover)),
                                           ),
                                           Align(

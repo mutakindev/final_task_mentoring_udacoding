@@ -61,7 +61,7 @@ class _WisataPageState extends State<WisataPage> {
                             ),
                             SizedBox(height: 20),
                             Card(
-                              elevation: 10,
+                              elevation: 2,
                               margin: EdgeInsets.zero,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -145,7 +145,7 @@ class _WisataPageState extends State<WisataPage> {
                                                   ],
                                                   image: DecorationImage(
                                                       image: CachedNetworkImageProvider(
-                                                          "$baseImageUrl/${wisata.images.first}"),
+                                                          "$baseWisataImageUrl/${wisata.images.first}"),
                                                       fit: BoxFit.cover)),
                                             ),
                                           ),
@@ -258,7 +258,7 @@ class _WisataPageState extends State<WisataPage> {
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(
-                        "$baseImageUrl/${wisata.images.first}"),
+                        "$baseWisataImageUrl/${wisata.images.first}"),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -499,7 +499,7 @@ class _CategoriesState extends State<Categories> {
                                                 ],
                                                 image: DecorationImage(
                                                     image: CachedNetworkImageProvider(
-                                                        "$baseImageUrl/${wisata.images.first}"),
+                                                        "$baseWisataImageUrl/${wisata.images.first}"),
                                                     fit: BoxFit.cover)),
                                           ),
                                           Align(
