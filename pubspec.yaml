@@ -30,12 +30,13 @@ dependencies:
   flutter_bloc: null
   http: null
   image_picker: ^0.7.3
+  shared_preferences: ^2.0.5
 
 dev_dependencies:
-  change_app_package_name: ^0.1.2
-
+  
   flutter_test:
     sdk: flutter
+  change_app_package_name: ^0.1.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

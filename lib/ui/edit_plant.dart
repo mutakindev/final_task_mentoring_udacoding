@@ -5,16 +5,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
+import 'package:parawisata_mutakin/ui/detail_plant_page.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
-class AddPlantPage extends StatefulWidget {
+class EditPlantPage extends StatefulWidget {
+  final PlantsResponse data;
+  EditPlantPage(this.data);
   @override
-  _AddPlantPageState createState() => _AddPlantPageState();
+  _EditPlantPageState createState() => _EditPlantPageState();
 }
 
-class _AddPlantPageState extends State<AddPlantPage> {
+class _EditPlantPageState extends State<EditPlantPage> {
   int categoryId = 0;
-  PlantCategoryResponse selectedCategory;
 
   final _plantsRequest = PlantRequest();
 
@@ -41,7 +43,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Add Plant'),
+        title: Text('Edit Plant'),
         backgroundColor: Colors.green,
       ),
       body: SafeArea(
@@ -59,6 +61,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                       children: [
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.plantName,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan plant name!"
                               : null,
@@ -71,6 +74,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.length,
                           keyboardType: TextInputType.number,
                           validator: (value) =>
                               value.isEmpty ? "Silahkan masukan length!" : null,
@@ -82,6 +86,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.weight,
                           keyboardType: TextInputType.number,
                           validator: (value) =>
                               value.isEmpty ? "Silahkan masukan weight!" : null,
@@ -93,6 +98,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.diameter,
                           keyboardType: TextInputType.number,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan diameter!"
@@ -106,6 +112,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.temperatur,
                           keyboardType: TextInputType.number,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan temperatur!"
@@ -119,6 +126,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.water,
                           validator: (value) =>
                               value.isEmpty ? "Silahkan masukan water!" : null,
                           onSaved: (water) => _plantsRequest.water = water,
@@ -129,6 +137,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.placement,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan placement!"
                               : null,
@@ -141,6 +150,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                         SizedBox(height: 14),
                         TextFormField(
+                          initialValue: widget.data.information,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan information!"
                               : null,
@@ -176,6 +186,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                           },
                         ),
                         TextFormField(
+                          initialValue: widget.data.category,
                           validator: (value) => value.isEmpty
                               ? "Silahkan masukan category!"
                               : null,
@@ -194,7 +205,8 @@ class _AddPlantPageState extends State<AddPlantPage> {
                           child: Column(
                             children: [
                               _image == null
-                                  ? Text("No Selected Image")
+                                  ? Image.network(
+                                      "$basePlantImageUrl/${widget.data.image}")
                                   : Image.file(_image),
                               MaterialButton(
                                 onPressed: () async {
@@ -211,30 +223,25 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         MaterialButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              if (_image != null) {
-                                _formKey.currentState.save();
-                                try {
-                                  showSnackbarMessage(context, "Loading....");
-                                  Map<String, dynamic> response =
-                                      await _apiService
-                                          .addPlant(_plantsRequest);
-                                  if (response != null) {
-                                    if (response['value'] == 1) {
-                                      showSnackbarMessage(
-                                          context, response['message']);
-                                      _formKey.currentState.reset();
-                                      _image = null;
-                                    } else {
-                                      showSnackbarMessage(
-                                          context, response['message']);
-                                    }
+                              _formKey.currentState.save();
+                              try {
+                                showSnackbarMessage(context, "Loading....");
+                                _plantsRequest.id = widget.data.id;
+                                Map<String, dynamic> response =
+                                    await _apiService.editPlant(_plantsRequest);
+                                if (response != null) {
+                                  if (response['value'] == 1) {
+                                    showSnackbarMessage(
+                                        context, response['message']);
+                                    _image = null;
+                                    setState(() {});
+                                  } else {
+                                    showSnackbarMessage(
+                                        context, response['message']);
                                   }
-                                } catch (e) {
-                                  showSnackbarMessage(context, e.toString());
                                 }
-                              } else {
-                                showSnackbarMessage(
-                                    context, "Gambar tidak boleh kosong!");
+                              } catch (e) {
+                                showSnackbarMessage(context, e.toString());
                               }
                             }
                           },

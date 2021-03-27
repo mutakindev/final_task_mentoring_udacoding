@@ -4,6 +4,7 @@ import 'package:parawisata_mutakin/bloc/plant_categories_bloc.dart';
 import 'package:parawisata_mutakin/model/categories_model.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/network/services.dart';
+import 'package:parawisata_mutakin/ui/data_by_kategory.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -73,6 +74,15 @@ class _CategoryPageState extends State<CategoryPage> {
                               background: Container(color: Colors.red),
                               child: Card(
                                 child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DataByKategory(
+                                                  category: category.idCategory,
+                                                )));
+                                  },
                                   title: Text(category.categoryName),
                                   trailing: IconButton(
                                     icon: Icon(

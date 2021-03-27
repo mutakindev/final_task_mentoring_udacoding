@@ -71,6 +71,7 @@ class PlantsResponse {
 }
 
 class PlantRequest {
+  String id;
   String plantName;
   String length;
   String weight;
@@ -83,6 +84,7 @@ class PlantRequest {
   String category;
 
   PlantRequest({
+    this.id,
     this.plantName,
     this.length,
     this.weight,
@@ -96,6 +98,7 @@ class PlantRequest {
   });
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "plant_name": plantName,
         "length": length,
         "weight": weight,

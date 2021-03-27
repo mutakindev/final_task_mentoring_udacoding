@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:parawisata_mutakin/bloc/plants_bloc.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
+import 'package:parawisata_mutakin/ui/edit_plant.dart';
 import 'package:parawisata_mutakin/ui/plants.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class DetailPlantPage extends StatelessWidget {
-  final PlantsResponse plant;
+  PlantsResponse plant;
+  bool isUpdated = false;
   ApiServices _apiServices = ApiServices();
 
   DetailPlantPage({this.plant});
@@ -42,7 +44,7 @@ class DetailPlantPage extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, isUpdated);
                     },
                     child: Container(
                       width: 40,
@@ -171,22 +173,28 @@ class DetailPlantPage extends StatelessWidget {
                           icon: Icon(Icons.delete_outline_rounded,
                               color: Colors.green),
                           onPressed: () async {
-                            print(plant.id);
+                            isUpdated = true;
                             showSnackbarMessage(context, "Loading...");
                             Map<String, dynamic> result =
                                 await _apiServices.deletePlant(plant.id);
 
                             if (result != null && result["value"] == 1) {
-                              PlantsBloc().add(GetPlantsList());
                               showSnackbarMessage(context,
                                   "${plant.plantName} ${result['message']}");
-                              Navigator.pop(context);
+                              Navigator.pop(context, isUpdated);
                             }
                           }),
                       IconButton(
                           iconSize: 32,
                           icon: Icon(Icons.edit, color: Colors.green),
-                          onPressed: () {})
+                          onPressed: () {
+                            isUpdated = true;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditPlantPage(plant)));
+                          })
                     ],
                   )
                 ],

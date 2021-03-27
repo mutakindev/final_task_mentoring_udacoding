@@ -7,7 +7,7 @@ import 'package:parawisata_mutakin/bloc/wisata_bloc.dart';
 import 'package:parawisata_mutakin/ui/detail_wisata_page.dart';
 import 'package:parawisata_mutakin/model/categories_model.dart';
 import 'package:parawisata_mutakin/model/wisata_model.dart';
-import 'package:parawisata_mutakin/upload.dart';
+import 'package:parawisata_mutakin/ui/widgets/custom_appbar.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class WisataPage extends StatefulWidget {
@@ -23,6 +23,7 @@ class _WisataPageState extends State<WisataPage> {
   void initState() {
     super.initState();
     _wisataBloc.add(GetWisataList());
+    initSharedPref();
   }
 
   @override
@@ -51,7 +52,8 @@ class _WisataPageState extends State<WisataPage> {
                       SliverList(
                         delegate: SliverChildListDelegate(
                           [
-                            CustomAppBar(),
+                            CustomeAppbar(
+                                sharedPreferences.getString('fullname')),
                             Text(
                               "Where do\nyou want to go?",
                               style: Theme.of(context)
@@ -572,48 +574,6 @@ class _CategoriesState extends State<Categories> {
                         )
                       ])),
       ],
-    );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25))],
-                color: Colors.white),
-            padding: EdgeInsets.all(3),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                    image: AssetImage("assets/images/profile.png")),
-              ),
-            ),
-          ),
-          SizedBox(width: 8),
-          Text(
-            "Hi, Mutakin",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle2
-                .copyWith(fontWeight: FontWeight.w600),
-          )
-        ],
-      ),
     );
   }
 }
