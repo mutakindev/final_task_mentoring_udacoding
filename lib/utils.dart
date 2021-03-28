@@ -11,8 +11,9 @@ Future<void> initSharedPref() async {
 
 void showSnackbarMessage(BuildContext context, String s) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(s),
-    backgroundColor: Colors.pink,
-    duration: Duration(milliseconds: 700),
-  ));
+      content: Text(s),
+      backgroundColor: Colors.pink,
+      duration: Duration(milliseconds: 700),
+      margin: EdgeInsets.all(16),
+      behavior: SnackBarBehavior.floating));
 }

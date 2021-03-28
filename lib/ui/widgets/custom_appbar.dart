@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:parawisata_mutakin/ui/profile_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomeAppbar extends StatelessWidget {
   String name;
@@ -33,7 +32,7 @@ class CustomeAppbar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
                         image: CachedNetworkImageProvider(
-                            'https://ui-avatars.com/api/?color=fafafa&background=d91aa0&size=200&name=$name}')),
+                            'https://ui-avatars.com/api/?color=fafafa&background=69b86e&size=200&name=$name}')),
                   ),
                 ),
               ),

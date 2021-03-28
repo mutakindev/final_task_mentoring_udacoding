@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parawisata_mutakin/model/user_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
 import 'package:parawisata_mutakin/ui/auth/login.dart';
+import 'package:parawisata_mutakin/utils.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -141,22 +142,24 @@ class RegisterPageState extends State<RegisterPage> {
                               if (_formKey.currentState.validate()) {
                                 _formKey.currentState.save();
                                 try {
-                                  showMessage("Loading....");
+                                  showSnackbarMessage(context, "Loading....");
                                   final response =
                                       await _services.register(registerData);
 
                                   if (response.value == 1) {
-                                    showMessage(response.message);
+                                    showSnackbarMessage(
+                                        context, response.message);
 
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => LoginPage()));
                                   } else {
-                                    showMessage(response.message);
+                                    showSnackbarMessage(
+                                        context, response.message);
                                   }
                                 } catch (e) {
-                                  showMessage(e.toString());
+                                  showSnackbarMessage(context, e.toString());
                                 }
                               }
                             },
@@ -197,15 +200,5 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
-  }
-
-  showMessage(String message) {
-    return _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.pink.shade300,
-      duration: Duration(seconds: 3),
-      margin: EdgeInsets.all(16),
-      behavior: SnackBarBehavior.floating,
-    ));
   }
 }

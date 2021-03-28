@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parawisata_mutakin/bloc/plant_categories_bloc.dart';
-import 'package:parawisata_mutakin/model/categories_model.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/network/services.dart';
 import 'package:parawisata_mutakin/ui/data_by_kategory.dart';

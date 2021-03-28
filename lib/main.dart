@@ -1,22 +1,40 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parawisata_mutakin/bloc/plant_categories_bloc.dart';
-import 'package:parawisata_mutakin/bloc/plants_bloc.dart';
-import 'package:parawisata_mutakin/ui/plants.dart';
+import 'package:parawisata_mutakin/ui/onboarding.dart';
 import 'package:parawisata_mutakin/ui/splash_screen.dart';
 import 'package:parawisata_mutakin/ui/wisata.dart';
+import 'package:parawisata_mutakin/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<Widget> buildPage() async {
+    SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    bool isNewInstalled = sharedpref.getBool('first_launch');
+
+    if (isNewInstalled == null) {
+      sharedPreferences.setBool('first_launch', true);
+    } else if (isNewInstalled == false) {
+      return SplashScreen();
+    } else {
+      return OnboardingPage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Final Task',
+      title: 'Plant & Tourist',
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: Colors.green,
         fontFamily: 'Montserrat',
         accentColor: Colors.orange,
         textTheme: TextTheme(

@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:parawisata_mutakin/bloc/plants_bloc.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
 import 'package:parawisata_mutakin/ui/edit_plant.dart';
-import 'package:parawisata_mutakin/ui/plants.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class DetailPlantPage extends StatelessWidget {

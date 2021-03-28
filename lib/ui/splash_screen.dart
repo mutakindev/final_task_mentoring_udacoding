@@ -20,21 +20,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFDFCE7),
       body: Container(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.network(
-                "",
-                width: 100,
-                height: 100,
+              Image.asset(
+                'assets/icon.png',
+                width: MediaQuery.of(context).size.width * 0.7,
               ),
               Text(
                 "Plants & Tourist",
                 style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.brown,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
                 ),
               ),
             ],
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Timer> startTimer() async {
-    return Timer(Duration(seconds: 2), onDone);
+    return Timer(Duration(seconds: 3), onDone);
   }
 
   void onDone() async {

@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
-import 'package:parawisata_mutakin/ui/detail_plant_page.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class EditPlantPage extends StatefulWidget {

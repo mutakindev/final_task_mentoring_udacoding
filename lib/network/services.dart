@@ -12,7 +12,10 @@ class ApiServices {
     try {
       var url = Uri.https('flutter-task4.000webhostapp.com', '/api/wisata');
 
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/x-www-form-urlencoded"
+      });
       return wisataResponseFromJson(response.body);
     } catch (e) {}
   }
@@ -44,10 +47,18 @@ class ApiServices {
           'https://flutter-task4.000webhostapp.com/api/plants-by-kategori.php?id_category=$category_id');
 
       final response = await http.get(url);
+      print(response.body);
+
       if (response.statusCode == 200) {
-        return plantsResponseFromJson(response.body);
+        if (response.body.isNotEmpty ||
+            response.contentLength > 0 ||
+            response.body != '0 result') {
+          return plantsResponseFromJson(response.body);
+        } else {
+          return null;
+        }
       } else {
-        print(response.body);
+        return null;
       }
     } catch (e) {}
   }

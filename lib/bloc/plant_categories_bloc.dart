@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:parawisata_mutakin/model/categories_model.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/network/services.dart';
 

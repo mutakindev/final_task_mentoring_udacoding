@@ -43,7 +43,10 @@ class _WisataPageState extends State<WisataPage> {
                 );
               } else if (state is WisataLoaded) {
                 List<WisataResponse> dataTempatWisata = [];
-                dataTempatWisata.addAll(state.listWisata);
+                print(state.listWisata);
+                if (state.listWisata != null) {
+                  dataTempatWisata.addAll(state.listWisata);
+                }
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.0)
                       .add(EdgeInsets.only(top: 24)),
