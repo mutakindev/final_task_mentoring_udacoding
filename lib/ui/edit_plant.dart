@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:parawisata_mutakin/model/plant_categories.dart';
 import 'package:parawisata_mutakin/model/plant_model.dart';
 import 'package:parawisata_mutakin/network/services.dart';
+import 'package:parawisata_mutakin/ui/main_app.dart';
 import 'package:parawisata_mutakin/utils.dart';
 
 class EditPlantPage extends StatefulWidget {
@@ -170,32 +171,27 @@ class _EditPlantPageState extends State<EditPlantPage> {
                               AsyncSnapshot<List<PlantCategoryResponse>>
                                   snapshot) {
                             if (snapshot.hasData) {
-                              return Container(
-                                height: 30,
-                                child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: snapshot.data
-                                        .map((e) => Text(
-                                            "${e.idCategory} ${e.categoryName} "))
-                                        .toList()),
-                              );
+                              return DropdownButtonFormField<String>(
+                                  validator: (value) {
+                                    if (value == null || value == "") {
+                                      return "Silahkan isi category!";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  value: widget.data.category,
+                                  onChanged: (value) {},
+                                  onSaved: (categoryId) =>
+                                      _plantsRequest.category = categoryId,
+                                  items: snapshot.data
+                                      .map((e) => DropdownMenuItem(
+                                          value: e.idCategory,
+                                          child: Text(e.categoryName)))
+                                      .toList());
                             } else {
-                              return CircularProgressIndicator();
+                              return Center(child: CircularProgressIndicator());
                             }
                           },
-                        ),
-                        TextFormField(
-                          initialValue: widget.data.category,
-                          validator: (value) => value.isEmpty
-                              ? "Silahkan masukan category!"
-                              : null,
-                          keyboardType: TextInputType.number,
-                          onSaved: (category) =>
-                              _plantsRequest.category = category,
-                          decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.brown)),
-                              labelText: "Category Id"),
                         ),
                         SizedBox(
                           height: 10,
@@ -233,7 +229,10 @@ class _EditPlantPageState extends State<EditPlantPage> {
                                     showSnackbarMessage(
                                         context, response['message']);
                                     _image = null;
-                                    setState(() {});
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MainApp()));
                                   } else {
                                     showSnackbarMessage(
                                         context, response['message']);

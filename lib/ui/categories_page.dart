@@ -62,15 +62,26 @@ class _CategoryPageState extends State<CategoryPage> {
                                 Map<String, dynamic> result = await _apiServices
                                     .deletePlantCategories(category.idCategory);
 
-                                if (result["value"] == 1) {
-                                  setState(() {
-                                    listCategory.remove(category);
-                                  });
-                                  showSnackbarMessage(context,
-                                      "${category.categoryName} ${result['message']}");
-                                }
+                                try {
+                                  if (result["value"] == 1) {
+                                    setState(() {
+                                      listCategory.remove(category);
+                                    });
+                                    showSnackbarMessage(context,
+                                        "${category.categoryName} ${result['message']}");
+                                  } else {
+                                    _plantCategoriesBloc
+                                        .add(GetPlantCategoriesList());
+                                    showSnackbarMessage(context,
+                                        "${category.categoryName} ${result['message']}");
+                                  }
+                                } catch (e) {}
                               },
-                              background: Container(color: Colors.red),
+                              background: Container(
+                                alignment: Alignment.centerLeft,
+                                color: Colors.red,
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
                               child: Card(
                                 child: ListTile(
                                   onTap: () {

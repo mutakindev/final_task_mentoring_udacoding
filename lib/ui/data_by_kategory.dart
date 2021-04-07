@@ -142,7 +142,7 @@ class _DataByKategoryState extends State<DataByKategory> {
                   );
                 });
           } else {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
         },
       ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parawisata_mutakin/ui/auth/login.dart';
 import 'package:parawisata_mutakin/ui/main_app.dart';
+import 'package:parawisata_mutakin/ui/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -51,9 +52,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void onDone() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bool isFirstLaunch = sharedPreferences.getBool('isFirstLaunch');
+
+    if (isFirstLaunch == null) {
+      await sharedPreferences.setBool('isFirstLaunch', true);
+      isFirstLaunch = true;
+    }
 
     int value = sharedPreferences.getInt("value");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => value == 1 ? MainApp() : LoginPage()));
+        builder: (context) => isFirstLaunch
+            ? OnboardingPage()
+            : value == 1
+                ? MainApp()
+                : LoginPage()));
   }
 }

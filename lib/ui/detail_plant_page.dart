@@ -63,6 +63,7 @@ class DetailPlantPage extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Container(
                       padding: EdgeInsets.only(top: 24, right: 16, bottom: 16),
+                      width: 140,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

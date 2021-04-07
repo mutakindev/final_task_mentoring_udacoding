@@ -68,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                       image: CachedNetworkImageProvider(
-                                          'https://ui-avatars.com/api/?color=fafafa&background=d91aa0&size=200&name=${sharedPreferences.getString('fullname')}'))),
+                                          'https://ui-avatars.com/api/?color=fafafa&background=69b86e&size=200&name=${sharedPreferences.getString('fullname')}'))),
                             ),
                           ),
                         ),

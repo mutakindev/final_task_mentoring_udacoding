@@ -161,31 +161,27 @@ class _AddPlantPageState extends State<AddPlantPage> {
                               AsyncSnapshot<List<PlantCategoryResponse>>
                                   snapshot) {
                             if (snapshot.hasData) {
-                              return Container(
-                                height: 30,
-                                child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: snapshot.data
-                                        .map((e) => Text(
-                                            "${e.idCategory} ${e.categoryName} "))
-                                        .toList()),
-                              );
+                              return DropdownButtonFormField<String>(
+                                  validator: (value) {
+                                    if (value == null || value == "") {
+                                      return "Silahkan isi category!";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  value: '1',
+                                  onChanged: (value) {},
+                                  onSaved: (categoryId) =>
+                                      _plantsRequest.category = categoryId,
+                                  items: snapshot.data
+                                      .map((e) => DropdownMenuItem(
+                                          value: e.idCategory,
+                                          child: Text(e.categoryName)))
+                                      .toList());
                             } else {
-                              return CircularProgressIndicator();
+                              return Center(child: CircularProgressIndicator());
                             }
                           },
-                        ),
-                        TextFormField(
-                          validator: (value) => value.isEmpty
-                              ? "Silahkan masukan category!"
-                              : null,
-                          keyboardType: TextInputType.number,
-                          onSaved: (category) =>
-                              _plantsRequest.category = category,
-                          decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.brown)),
-                              labelText: "Category Id"),
                         ),
                         SizedBox(
                           height: 10,
@@ -213,6 +209,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                             if (_formKey.currentState.validate()) {
                               if (_image != null) {
                                 _formKey.currentState.save();
+                                print(_plantsRequest.category);
                                 try {
                                   showSnackbarMessage(context, "Loading....");
                                   Map<String, dynamic> response =
@@ -224,6 +221,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                                           context, response['message']);
                                       _formKey.currentState.reset();
                                       _image = null;
+                                      setState(() {});
                                     } else {
                                       showSnackbarMessage(
                                           context, response['message']);

@@ -39,7 +39,10 @@ class _PlantsState extends State<Plants> {
     _plantsBloc.add(GetPlantsList());
     plantCategoriesBloc.add(GetPlantCategoriesList());
     selectedCategory = "";
-    services.getDataPlants().then((value) => filteredList.addAll(value));
+    services.getDataPlants().then((value) {
+      filteredList.clear();
+      filteredList.addAll(value);
+    });
     setState(() {});
   }
 
@@ -59,6 +62,7 @@ class _PlantsState extends State<Plants> {
         }),
       ],
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: RefreshIndicator(
               onRefresh: () {

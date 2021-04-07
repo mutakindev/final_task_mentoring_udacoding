@@ -103,9 +103,6 @@ class _LoginPageState extends State<LoginPage> {
 
                             if (response != null) {
                               if (response.value == 1) {
-                                print(response);
-                                showSnackbarMessage(context, "Login Berhasil");
-
                                 sharedPref.setInt("value", response.value);
                                 sharedPref.setString(
                                     "username", response.username);

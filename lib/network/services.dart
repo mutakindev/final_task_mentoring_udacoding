@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -184,6 +185,7 @@ class ApiServices {
       var url = Uri.https(
           'flutter-task4.000webhostapp.com', '/api/delete_plant_categories');
       final response = await http.post(url, body: {"id": categoryId});
+      print(response.body);
 
       Map<String, dynamic> object = jsonDecode(response.body);
       return object;
@@ -207,7 +209,12 @@ class ApiServices {
   Future<LoginResponse> login(LoginRequest userRequest) async {
     try {
       var url = Uri.parse("https://flutter-task4.000webhostapp.com/login.php");
-      final response = await http.post(url, body: userRequest.toJson());
+      final response = await http
+          .post(url, body: userRequest.toJson())
+          .timeout(const Duration(seconds: 10), onTimeout: () {
+        throw TimeoutException(
+            'The connection has timed out, Please try again!');
+      });
       print(response.body);
       if (response.statusCode == 200) {
         return LoginResponse.fromJson(response.body);
